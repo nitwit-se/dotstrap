@@ -13,7 +13,7 @@ def runccore(*args):
     p = pexpect.spawn(" ".join(args))
     lines = p.readlines()
     for l in lines:
-        click.echo(click.style(' .g. ', fg='cyan'),nl=False)
+        click.echo(click.style('.g.  ', fg='cyan'),nl=False)
         click.echo(l,nl=False)
     timeout=30
     while p.isalive() and timeout>0:
@@ -77,7 +77,7 @@ def destroy():
 
 @click.command()
 @click.argument('args', nargs=-1)
-def status():
+def status(args):
     """Git status"""
     #run( "remote", "show", "origin" )
     run( "status", *args )
@@ -120,7 +120,7 @@ def add( filename ):
         return
     if run( "push", "origin", "master" ) != 0:
         return
-    echo(click.style('%d added locally' % fliename, fg="green") + click.style(" (don't forget to commit and sync)",fg="blue"))
+    echo(click.style('%d added locally and pushed to origin' % filename, fg="green"))
 
 
 @click.command()

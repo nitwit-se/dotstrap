@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "dotstrap"
-version = "0.1.0"
-description = ""
+version = "0.1.1"
+description = "A simiple Python based command line tool that acts as a git wrapper for simplifying dotfile management via bare git repository."
 authors = ["mark <mark@dixon.se>"]
 
 [tool.poetry.dependencies]
