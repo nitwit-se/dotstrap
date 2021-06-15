@@ -10,10 +10,14 @@ import pexpect, time
 # echo "alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'" >> $HOME/.bashrc
 
 def runccore(*args):
+    click.echo(click.style('.ds. ', fg='magenta'),nl=False)
+    click.echo(click.style(" ".join(args), fg='green'))
+    click.echo(click.style('.git. ', fg='cyan'),nl=True)
+
     p = pexpect.spawn(" ".join(args))
     lines = p.readlines()
     for l in lines:
-        click.echo(click.style('.g.  ', fg='cyan'),nl=False)
+        click.echo(click.style('.git. ', fg='cyan'),nl=False)
         click.echo(l,nl=False)
     timeout=30
     while p.isalive() and timeout>0:
@@ -21,14 +25,9 @@ def runccore(*args):
         time.sleep(1)
         timeout-=1
     p.close()
-    click.echo(click.style('', fg='cyan'),nl=True)
+    click.echo(click.style('', fg='magenta'),nl=True)
 
     return p.exitstatus
-
-    retval = subprocess.run( list(args), check=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
-    if retval.stdout != "":
-        [click.echo( click.style(' .git.     ', fg='cyan') + l ) for l in retval.stdout.split("\n")]
-    return retval
 
 def run(*args):
     return runccore( 'git',"--git-dir=%s/.dotstrap" % os.environ["HOME"], "--work-tree=%s" % os.environ["HOME"], *args )
@@ -42,7 +41,7 @@ def cli():
 
 Inspired by
 https://www.atlassian.com/git/tutorials/dotfiles
-and
+And
 https://news.ycombinator.com/item?id=11071754
     """
     pass
@@ -50,7 +49,7 @@ https://news.ycombinator.com/item?id=11071754
 @click.command()
 @click.argument('repo')
 def init( repo ):
-    """Initializes dotstrap with a remote git repository"""
+    """Initializes dotstrap into an empty remote git repository"""
     runccore("git", "init", "--bare", "%s/.dotstrap" % os.environ["HOME"])
     run( "config", "--local", "status.showUntrackedFiles", "no" )
     run( "remote", "remove", "origin" )
@@ -60,6 +59,28 @@ def init( repo ):
         echo(click.style('could not push to remote master - did you create an empty repo first?', fg="red"))
         return
     echo('initialize done')
+
+@click.command()
+@click.argument('repo')
+def clone( repo ):
+    """Initializes dotstrap by cloning an existing remote git repository"""
+    with open( "%s/.gitignore" % os.environ["HOME"], "a" ) as file: # Use file to refer to the file object
+        file.write( "%s/.dotstrap\n" % os.environ["HOME"] )
+
+    clone = runccore("git", "clone", "--bare", repo, "%s/.dotstrap" % os.environ["HOME"])
+    checkout = run( "checkout" )
+    if clone != 0 or checkout != 0:
+        echo(click.style('could not checkout repository :(', fg="red"))
+        echo(click.style('things to check:', fg="white"))
+        echo(click.style(' - did you specfy a valid repo?', fg="white"))
+        echo(click.style(' - are you authenticated for the repo?', fg="white"))
+        echo(click.style(' - maybe you have some files in the way for a checkout?', fg="white"))
+        echo(click.style('     try moving them away or deleting them.', fg="white"))
+        return
+
+    run( "config", "--local", "status.showUntrackedFiles", "no" )
+
+    echo('cloning done')
 
 @click.command()
 def destroy():
@@ -96,9 +117,9 @@ def sync():
     """Git sync with remote origin"""
     run( "pull", "--rebase", "origin", "master" )
     if run( "push", "origin", "master" ) != 0:
-        echo(click.style('could not push to remote master - repos out of sync?', fg="red"))
+        echo(click.style('could not push to remote master - repo out of sync?', fg="red"))
         return
-    echo(click.style('repos synced', fg="green"))
+    echo(click.style('repo synced', fg="green"))
 
 @click.command()
 @click.argument('args', nargs=-1)
@@ -130,6 +151,7 @@ def git( args ):
     run( *args )
 
 cli.add_command(init)
+cli.add_command(clone)
 cli.add_command(destroy)
 cli.add_command(status)
 cli.add_command(diff)

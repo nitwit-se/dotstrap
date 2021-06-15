@@ -28,7 +28,7 @@ when using a git bare repository approach to dotfile handling.
 
 To understand how and why it works, read Nicola Paolucci's tutorial:
 https://www.atlassian.com/git/tutorials/dotfiles
-or 
+
 ------
 
 
