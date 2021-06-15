@@ -3,8 +3,6 @@ Dotstrap
 ========
 
 
-.. contents::
-
 .. image:: //img.shields.io/pypi/v/dotstrap.svg
     :target: https://pypi.org/project/dotstrap/
 
@@ -34,7 +32,7 @@ Just install via pip:
 
 .. code:: shell
 
-    $ pip install dotstrap
+    pip install dotstrap
 
 
 Next create an empty repo on e.g. github for your dotfiles.
@@ -43,15 +41,13 @@ Initialize dotstrap repository with your own repo URL:
 
 .. code:: shell
 
-    $ dotstrap init https://github.com/nitwit-se/dotfiles.git
-    # TODO: output
+    dotstrap init https://github.com/nitwit-se/dotfiles.git
 
 Then start adding files to your repo. Dotstrap will automatically commit and sync upstream:
 
 .. code:: shell
 
-    $ dotstrap add ~/.emacs
-    # TODO: output
+    dotstrap add ~/.emacs
 
 Dotstrap second system
 ----------------------
@@ -60,14 +56,13 @@ Again, install via pip:
 
 .. code:: shell
 
-    $ pip install dotstrap
+    pip install dotstrap
 
 
 Then clone with your own repop URL:
 
 .. code:: shell
 
-    $ dotstrap clone https://github.com/nitwit-se/dotfiles.git
-    # TODO: output
+    dotstrap clone https://github.com/nitwit-se/dotfiles.git
 
 Done! (Well, best-case scenario).
