@@ -125,7 +125,7 @@ def sync():
 def commit(args):
     """Git commits any pending files"""
     if len(args)==0:
-        run( "commit", "-a", "-m", "Updated files" )
+        run( "commit", "-a", "-m", "'Updated files'" )
     else:
         run( "commit", *args )
     echo(click.style('all changes committed locally', fg="green") + click.style(' (sync if you want them remote too)',fg="blue"))
