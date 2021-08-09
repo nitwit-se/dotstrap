@@ -15,11 +15,10 @@ def runccore(*args):
     click.echo(click.style('.git. ', fg='cyan'),nl=True)
 
     p = pexpect.spawn(" ".join(args))
-    lines = p.readlines()
-    for l in lines:
+    for l in p:
         click.echo(click.style('.git. ', fg='cyan'),nl=False)
         click.echo(l,nl=False)
-    timeout=30
+    timeout=10
     while p.isalive() and timeout>0:
         click.echo(click.style('.', fg='cyan'))
         time.sleep(1)
@@ -30,7 +29,7 @@ def runccore(*args):
     return p.exitstatus
 
 def run(*args):
-    return runccore( 'git',"--git-dir=%s/.dotstrap" % os.environ["HOME"], "--work-tree=%s" % os.environ["HOME"], *args )
+    return runccore( 'git', "--no-pager", "--git-dir=%s/.dotstrap" % os.environ["HOME"], "--work-tree=%s" % os.environ["HOME"], *args )
 
 def echo(s):
     click.echo( click.style('.ds. ', fg='magenta') + s )
