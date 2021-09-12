@@ -140,7 +140,7 @@ def add( filename ):
         return
     if run( "push", "origin", "master" ) != 0:
         return
-    echo(click.style('%d added locally and pushed to origin' % filename, fg="green"))
+    echo(click.style('%s added locally and pushed to origin' % filename, fg="green"))
 
 
 @click.command()
